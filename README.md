@@ -35,3 +35,7 @@ HTMLファイルは投稿が100件ごと1ファイル出来上がります。
 
 アルバムに関しては下記のようにalbumsフォルダ以下に年月毎にファイルが作成されます。
 <img width="1032" alt="スクリーンショット 2022-12-07 1 10 40" src="https://user-images.githubusercontent.com/1380767/205963600-7999a316-3ff2-40bd-8386-fda8a71acfbd.png">
+
+# ライセンス
+Electronと同じMITとします
+
