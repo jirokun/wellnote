@@ -4,6 +4,8 @@ const fs = require('fs');
 const { app, BrowserWindow, net, ipcMain } = require('electron');
 const { templateFoot, templateHead } = require('./tempalte');
 
+if (require('electron-squirrel-startup')) return;
+
 let mainWindow;
 let htmls = [];
 const allImgMap = new Map();
