@@ -1,14 +1,14 @@
 {
   "name": "wellnote",
   "version": "1.0.0",
-  "description": "",
+  "description": "data export from wellnote",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
-  "author": "",
+  "author": "Jiro Iwamoto",
   "license": "ISC",
   "devDependencies": {
     "@electron-forge/cli": "^6.0.4",
