@@ -111,6 +111,7 @@ async function downloadRawFile(token) {
       await saveImage(url, `${outputPath}/albums/${monthStr}/${fname}`, 5000);
     });
   }
+  mainWindow.webContents.executeJavaScript(`alert('エクスポートを終了します')`);
 }
 
 async function htmlEventHandler(event, html, index, imgSet) {
@@ -206,15 +207,14 @@ const createWindow = async () => {
       const r = el.getBoundingClientRect();
       const imgSet = new Set(Array.from(el.querySelectorAll('img')).map(el => el.src));
       window.scroll(window.pageXOffset, window.pageYOffset + r.height);
-      await wait(500);
+      await wait(200);
       window.electronAPI.sendHtml(html, index, imgSet);
     } else {
       window.electronAPI.sendHtml(null, index, []);
-      alert('HTMLの保存が完了しました');
     }
   }
   (async () => {
-    alert('HTMLの保存を開始します');
+    alert('エクスポートを開始します');
     await wait(3000);
     snapshot(0);
   })();
