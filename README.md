@@ -11,9 +11,12 @@ wellnoteのデータエクスポートを行うソフトウェア
 <img width="1312" alt="login" src="https://user-images.githubusercontent.com/1380767/205961981-845e53ed-99e2-4157-9bf8-a611fc00dc62.png">
 
 ログインするとHTMLの保存開始メッセージが表示されるのでOKを押してそのまましばらくお待ちください。
-<img width="1312" alt="confirm" src="https://user-images.githubusercontent.com/1380767/205962078-18540455-909b-48f7-995b-0476db5b610d.png">
+<img width="1312" alt="スクリーンショット 2022-12-07 1 49 34" src="https://user-images.githubusercontent.com/1380767/205973017-3cce9bca-dd35-4a6c-9a7a-432af3cfebd0.png">
 
-すべて保存し終わると下記の場所にwellnote_exportフォルダが作成されデータがエクスポートされます。
+エクスポートが終わるとダイアログが表示されます
+<img width="1268" alt="スクリーンショット 2022-12-07 1 50 28" src="https://user-images.githubusercontent.com/1380767/205973611-feda8661-36d5-4be4-aec6-ae0a3cc398c2.png">
+
+下記の場所にwellnote_exportフォルダが作成されデータがエクスポートされます。
 - Mac: 「書類」フォルダ
 - Windows: 「ドキュメント」フォルダ
 
