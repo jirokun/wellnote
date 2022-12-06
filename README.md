@@ -20,7 +20,8 @@ wellnoteのデータエクスポートを行うソフトウェア
 # 出力データについて
 <img width="1032" alt="スクリーンショット 2022-12-07 1 07 36" src="https://user-images.githubusercontent.com/1380767/205962906-3b6feeea-055f-48ac-95d0-6e607912927f.png">
 上記のようにhtmlファイルは中身はレイアウトやコメントが保持された状態でexportされます。
-<img width="1046" alt="スクリーンショット 2022-12-07 1 09 05" src="https://user-images.githubusercontent.com/1380767/205963310-4b7e5dcf-b7e5-4ffb-b487-8a2c134cf4c5.png">
+<img width="1046" alt="スクリーンショット 2022-12-07 1 13 18" src="https://user-images.githubusercontent.com/1380767/205964747-2e975bb6-6a3a-4170-9d06-7df5747a0bdd.png">
+
 HTMLファイルは投稿が100件ごと1ファイル出来上がります。
 
 アルバムに関しては下記のようにalbumsフォルダ以下に年月毎にファイルが作成されます。
