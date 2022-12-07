@@ -123,6 +123,7 @@ async function downloadRawFile(token) {
       const url = p.signature.content_url.replace('{size}', 'p');
       let fname = new URL(url).pathname.replace(/\//g, '_');
       if (!fname.includes(".")) fname += '.jpg';
+      mainWindow.webContents.executeJavaScript(`dialogMessage('Downloading ${url}')`);
       await retryableCall(async () => await saveImage(url, `${outputPath}/albums/${monthStr}/${fname}`, 30000), 3, `Failed to download ${url}`);
     }
   }
@@ -148,7 +149,7 @@ async function htmlEventHandler(event, html, index, imgSet) {
     fs.writeFileSync(`${outputPath}/${padding(index - perFile)}-${padding(index - 1)}.html`, result);
     htmls = [];
   }
-  if (!html) {
+  if (!html || index === 1) {
     // HTMLがnullの場合は最後に到達したということなのでファイルを出力
     const result = templateHead + htmls.join('\n') + templateFoot;
     console.log(index);
@@ -242,6 +243,19 @@ const createWindow = async () => {
       window.electronAPI.sendHtml(html, index, imgSet);
     } else {
       window.electronAPI.sendHtml(null, index, []);
+    }
+  }
+  function dialogMessage(message) {
+    const el = document.querySelector('#dialog-message');
+    if (el) {
+      el.innerText = message;
+    } else {
+      const dialogEl = document.createElement('dialog');
+      dialogEl.style = 'width: 80vw';
+      dialogEl.id = 'dialog-message';
+      document.body.appendChild(dialogEl);
+      dialogEl.innerText = message;
+      dialogEl.showModal();
     }
   }
   (async () => {
