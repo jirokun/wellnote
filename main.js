@@ -149,7 +149,7 @@ async function htmlEventHandler(event, html, index, imgSet) {
     fs.writeFileSync(`${outputPath}/${padding(index - perFile)}-${padding(index - 1)}.html`, result);
     htmls = [];
   }
-  if (!html || index === 1) {
+  if (!html) {
     // HTMLがnullの場合は最後に到達したということなのでファイルを出力
     const result = templateHead + htmls.join('\n') + templateFoot;
     console.log(index);
