@@ -26,12 +26,16 @@ async function waitForTargetURL(mainWindow) {
 
 async function saveImage(imgUrl, path, timeout) {
   return new Promise((resolve, reject) => {
+    console.log(`start downloading ${imgUrl} to ${path}...`);
     const file = fs.createWriteStream(path);
     const t = setTimeout(reject, timeout);
     https.get(imgUrl, function (response) {
       response.pipe(file);
-      clearTimeout(t);
-      resolve();
+      response.on('end', () => {
+        console.log(`downloaded ${imgUrl} to ${path}`);
+        clearTimeout(t);
+        resolve();
+      });
     });
   });
 }
@@ -85,33 +89,55 @@ async function loadJson(url, token) {
   })
 }
 
-async function loadAlbum(monthStr, token) {
+async function loadAlbum(monthStr, familyId, token) {
   const [year, month] = monthStr.split('-').map(t => Number(t));
   const from = new Date(year, month - 1).getTime() / 1000;
   const to = new Date(year, month).getTime() / 1000 - 1;
-  let albumJson = await loadJson(`https://api.wellnote.jp/v2/families/387836/album?from=${from}&to=${to}`, token);
+  let url = `https://api.wellnote.jp/v2/families/${familyId}/album?from=${from}&to=${to}`;
+  let albumJson = await loadJson(url, token);
+  if (!albumJson.photos) {
+    console.error(`Something wrong with ${url}`, albumJson);
+  }
   const photos = albumJson.photos;
   while (albumJson.has_next) {
-    albumJson = await loadJson(`https://api.wellnote.jp/v2/families/387836/album?cursor=${albumJson.next_cursor}&from=${from}&to=${to}`, token);
+    url = `https://api.wellnote.jp/v2/families/${familyId}/album?cursor=${albumJson.next_cursor}&from=${from}&to=${to}`;
+    albumJson = await loadJson(url, token);
+    if (!albumJson.photos) {
+      console.error(`Something wrong with ${url}`, albumJson);
+    }
     photos.push(...albumJson.photos);
   }
   return photos;
 }
 
 async function downloadRawFile(token) {
-  const { months } = await loadJson('https://api.wellnote.jp/v2/families/387836/album/available-months?tz=32400', token);
+  const { families } = await loadJson('https://api.wellnote.jp/v2/families', token);
+  const familyId = families[0].family_id;
+  const { months } = await loadJson(`https://api.wellnote.jp/v2/families/${familyId}/album/available-months?tz=32400`, token);
   for (let i = 0; i < months.length; i++) {
     const monthStr = months[i];
-    const photos = await loadAlbum(monthStr, token);
+    const photos = await loadAlbum(monthStr, familyId, token);
     fs.mkdirSync(`${outputPath}/albums/${monthStr}`, { recursive: true });
-    photos.forEach(async p => {
+    for (let j = 0; j < photos.length; j++) {
+      const p = photos[j];
       const url = p.signature.content_url.replace('{size}', 'p');
       let fname = new URL(url).pathname.replace(/\//g, '_');
       if (!fname.includes(".")) fname += '.jpg';
-      await saveImage(url, `${outputPath}/albums/${monthStr}/${fname}`, 5000);
-    });
+      await retryableCall(async () => await saveImage(url, `${outputPath}/albums/${monthStr}/${fname}`, 30000), 3, `Failed to download ${url}`);
+    }
   }
   mainWindow.webContents.executeJavaScript(`alert('エクスポートを終了します')`);
+}
+
+async function retryableCall(callback, times = 3, message = null) {
+  for (let i = 0; i < times; i++) {
+    try {
+      return await callback();
+    } catch (e) {
+      console.error(`Retryable call failed ${i + 1} times`, message);
+      await wait(1000);
+    }
+  }
 }
 
 async function htmlEventHandler(event, html, index, imgSet) {
@@ -136,16 +162,16 @@ async function htmlEventHandler(event, html, index, imgSet) {
   for (let i = 0; i < imgs.length; i++) {
     const img = imgs[i];
     if (allImgMap.has(img)) continue;
+    const url = new URL(img);
+    let fname = new URL(url).pathname.replace(/\//g, '_');
+    if (!fname.includes(".")) fname += '.jpg';
+    const path = `${outputPath}/images/${fname}`;
     try {
-      const url = new URL(img);
-      let fname = new URL(url).pathname.replace(/\//g, '_');
-      if (!fname.includes(".")) fname += '.jpg';
-      const path = `${outputPath}/images/${fname}`;
-      await saveImage(img, path, 5000);
-      allImgMap.set(img, fname);
+      await retryableCall(async () => await saveImage(img, path, 5000), 3, `Failed to download ${img}`);
     } catch (e) {
-      console.error('ERROR occured', e);
+      console.error('ERROR occured ' + img);
     }
+    allImgMap.set(img, fname);
   }
   let convertedHtml = html;
   allImgMap.forEach((v, k) => {
@@ -156,6 +182,11 @@ async function htmlEventHandler(event, html, index, imgSet) {
   await mainWindow.webContents.executeJavaScript(`snapshot(${index + 1})`);
 }
 
+async function wait(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms)
+  });
+}
 
 function initEvent() {
   ipcMain.on('html', htmlEventHandler);
@@ -200,7 +231,7 @@ const createWindow = async () => {
     for (let i = 0; i < 10; i++) {
       el = document.querySelector(\`*[data-index="\${index}"]\`);
       if (el && el.outerHTML) break;
-      await wait(100);
+      await wait(1000);
     }
     if (el) {
       let html = el.outerHTML;
