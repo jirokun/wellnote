@@ -9,7 +9,9 @@ wellnoteのデータエクスポートを行うソフトウェア
 # ダウンロード
 - [Windows](https://github.com/jirokun/wellnote/releases/download/pre-release/wellnote-0.1.exe)
    - DLしたexeを実行してください
-- [Mac](https://github.com/jirokun/wellnote/releases/download/pre-release/wellnote-darwin-arm64-0.1.zip)
+- [M1 Mac](https://github.com/jirokun/wellnote/releases/download/pre-release/wellnote-darwin-arm64-0.1.zip)
+   - zipを解凍してwellnoteを実行してください
+- [Intel Mac](https://github.com/jirokun/wellnote/releases/download/pre-release/wellnote-darwin-x64-0.1.zip)
    - zipを解凍してwellnoteを実行してください
 
 # 使い方
