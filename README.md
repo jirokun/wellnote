@@ -7,13 +7,12 @@ wellnoteのデータエクスポートを行うソフトウェア
 2. アルバムの画像・動画
 
 # ダウンロード
-- [Windows](https://github.com/jirokun/wellnote/releases/download/pre-release/wellnote-0.1.exe)
-   - DLしたexeを実行してください
-- [M1 Mac](https://github.com/jirokun/wellnote/releases/download/pre-release/wellnote-darwin-arm64-0.1.zip)
-   - zipを解凍してwellnoteを実行してください
-- [Intel Mac](https://github.com/jirokun/wellnote/releases/download/pre-release/wellnote-darwin-x64-0.1.zip)
-   - zipを解凍してwellnoteを実行してください
+[Releaseページ](https://github.com/jirokun/wellnote/releases)からDLできます
 
+# リリースノート
+- 0.2: DLできない不具合を修正しました
+- 0.1: 初期リリース
+   
 # 使い方
 起動するとwellnoteのログイン画面が表示されます。
 <img width="1312" alt="login" src="https://user-images.githubusercontent.com/1380767/205961981-845e53ed-99e2-4157-9bf8-a611fc00dc62.png">
